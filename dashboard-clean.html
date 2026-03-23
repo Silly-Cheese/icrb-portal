@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | ICRB General Assembly Portal</title>
+  <link rel="stylesheet" href="styles/global.css"/>
+  <link rel="stylesheet" href="styles/dashboard.css"/>
+  <link rel="stylesheet" href="styles/dashboard-clean.css"/>
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="brand-panel">
+          <div class="eyebrow">ICRB General Assembly Portal</div>
+          <h2>Dashboard</h2>
+          <p class="muted">Governance, voting, and administrative control center.</p>
+        </div>
+        <nav></nav>
+      </div>
+
+      <div class="profile-card">
+        <div class="name" id="sidebarUsername">Loading...</div>
+        <div class="muted" id="sidebarCommittee">Loading committee...</div>
+        <div class="role-pill-clean" id="sidebarRole">Loading role...</div>
+        <div style="margin-top:14px;">
+          <button id="logoutBtn" class="button secondary" style="width:100%;">Logout</button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content stack">
+      <section class="dashboard-header-clean">
+        <article class="card welcome-card-clean">
+          <div class="status-chip-clean">Portal Online</div>
+          <h1 style="margin:0 0 8px;">Welcome back, <span id="username">Member</span></h1>
+          <p class="lead" style="margin:0;">This is the polished cleanup dashboard for the ICRB General Assembly Portal. It gives you a cleaner landing experience, stronger page hierarchy, and role-aware navigation.</p>
+          <div class="quick-stats-clean">
+            <div class="stat-block-clean">
+              <div class="label">Role</div>
+              <div class="value" id="roleValue">—</div>
+            </div>
+            <div class="stat-block-clean">
+              <div class="label">Committee</div>
+              <div class="value" id="committeeValue">—</div>
+            </div>
+            <div class="stat-block-clean">
+              <div class="label">Voting Access</div>
+              <div class="value" id="votingValue">—</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Session Overview</div>
+          <h2 style="margin-top:0;">Current Session</h2>
+          <div class="insight-list-clean">
+            <div class="insight-item-clean"><strong>Member ID:</strong> <span id="memberIdValue">—</span></div>
+            <div class="insight-item-clean"><strong>Committee ID:</strong> <span id="committeeIdValue">—</span></div>
+            <div class="insight-item-clean"><strong>Admin Access:</strong> <span id="adminValue">—</span></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="grid two-up">
+        <article class="card">
+          <div class="eyebrow">Portal Modules</div>
+          <h2>What You Can Access</h2>
+          <div class="insight-list-clean" id="moduleList"></div>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Cleanup Pass</div>
+          <h2>What Was Improved</h2>
+          <div class="insight-list-clean">
+            <div class="insight-item-clean">Cleaner dashboard hierarchy and spacing</div>
+            <div class="insight-item-clean">Role-aware sidebar with admin fallback logic</div>
+            <div class="insight-item-clean">Improved profile panel and session summary</div>
+            <div class="insight-item-clean">Foundation for a more polished page family</div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { requireAuth, logout } from './js/auth/session.js';
+    import { buildSidebarClean } from './js/layout/sidebar-clean.js';
+
+    const rawUser = requireAuth();
+    const user = buildSidebarClean(rawUser || {});
+
+    document.getElementById('username').textContent = user.username || 'Member';
+    document.getElementById('sidebarUsername').textContent = user.username || 'Member';
+    document.getElementById('sidebarCommittee').textContent = user.committee || 'No committee assigned';
+    document.getElementById('sidebarRole').textContent = user.role || 'No role assigned';
+    document.getElementById('roleValue').textContent = user.role || '—';
+    document.getElementById('committeeValue').textContent = user.committee || '—';
+    document.getElementById('votingValue').textContent = user.canVote ? 'Enabled' : 'Disabled';
+    document.getElementById('memberIdValue').textContent = user.memberId || '—';
+    document.getElementById('committeeIdValue').textContent = user.committeeId || '—';
+    document.getElementById('adminValue').textContent = (user.isAdmin || user.isSuperAdmin) ? 'Granted' : 'Standard';
+
+    const moduleList = document.getElementById('moduleList');
+    const modules = [
+      'Policies and submissions',
+      'Voting sessions and legislative actions',
+      'Analytics and live portal metrics'
+    ];
+
+    if (user.isAdmin || user.isSuperAdmin) {
+      modules.push('Members administration');
+      modules.push('Infractions oversight');
+      modules.push('Settings and configuration');
+    }
+
+    moduleList.innerHTML = modules.map(item => `<div class="insight-item-clean">${item}</div>`).join('');
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await logout();
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
