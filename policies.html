@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Policies | ICRB Portal</title>
+  <link rel="stylesheet" href="styles/global.css"/>
+  <link rel="stylesheet" href="styles/dashboard.css"/>
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <h2>ICRB</h2>
+      <nav></nav>
+      <button id="logoutBtn">Logout</button>
+    </aside>
+
+    <main class="main-content">
+      <div class="card">
+        <div class="eyebrow">Policy Submission</div>
+        <h1>Policies</h1>
+        <p class="muted">Members may submit policies for review. Admins may update review status and internal notes.</p>
+
+        <form id="policyForm" class="stack" style="margin-top:18px;">
+          <label class="field-label" for="policyTitle">Policy Title</label>
+          <input id="policyTitle" name="policyTitle" type="text" placeholder="Enter policy title" required/>
+
+          <label class="field-label" for="policyCategory">Category of Policy</label>
+          <select id="policyCategory" name="policyCategory" required>
+            <option value="">Select category</option>
+            <option value="General Policy">General Policy</option>
+            <option value="Employment Termination Policy/Recommendation">Employment Termination Policy/Recommendation</option>
+            <option value="Emergency Policy">Emergency Policy</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <label class="field-label" for="submittingCommittee">Committee Submitting It</label>
+          <select id="submittingCommittee" name="submittingCommittee" required>
+            <option value="">Select committee</option>
+            <option value="Executive Authority">Executive Authority</option>
+            <option value="Accreditation">Accreditation</option>
+            <option value="Compliance">Compliance</option>
+            <option value="Employment">Employment</option>
+            <option value="Audit">Audit</option>
+            <option value="Relations">Relations</option>
+            <option value="Certification">Certification</option>
+            <option value="Judicial and Appeals">Judicial and Appeals</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <label class="field-label" for="policySummary">Detailed Summary</label>
+          <textarea id="policySummary" name="policySummary" rows="6" placeholder="Provide a detailed policy summary" required></textarea>
+
+          <label class="field-label" for="googleDocLink">Google Document Policy Link</label>
+          <input id="googleDocLink" name="googleDocLink" type="url" placeholder="https://docs.google.com/..." required/>
+
+          <button id="submitPolicyButton" class="button primary" type="submit">Submit Policy</button>
+          <div id="policyFormStatus" class="page-status"></div>
+        </form>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <h2>Submitted Policies</h2>
+        <div id="policyList" class="stack"></div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { requireAuth, logout } from './js/auth/session.js';
+    import { buildSidebar } from './js/layout/sidebar.js';
+    import { initializePoliciesPage } from './js/pages/policies.js';
+
+    const user = requireAuth();
+    buildSidebar(user);
+    await initializePoliciesPage(user);
+
+    document.getElementById('logoutBtn').onclick = async () => {
+      await logout();
+      window.location.href = 'login.html';
+    };
+  </script>
+</body>
+</html>
