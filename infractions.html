@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Infractions | ICRB Portal</title>
+  <link rel="stylesheet" href="styles/global.css"/>
+  <link rel="stylesheet" href="styles/dashboard.css"/>
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <h2>ICRB</h2>
+      <nav></nav>
+      <button id="logoutBtn">Logout</button>
+    </aside>
+
+    <main class="main-content stack">
+      <section class="card">
+        <div class="eyebrow">Employee Oversight</div>
+        <h1>Infractions</h1>
+        <p class="muted">This page is restricted to admins and super admins. Infractions are tracked separately from policies and voting.</p>
+      </section>
+
+      <section id="infractionAdminPanel" class="card" hidden>
+        <h2>Issue Infraction</h2>
+        <form id="infractionForm" class="stack">
+          <label class="field-label" for="employeeMemberId">Employee Member ID</label>
+          <input id="employeeMemberId" type="text" placeholder="Enter employee member ID" required/>
+
+          <label class="field-label" for="employeeUsername">Employee Username</label>
+          <input id="employeeUsername" type="text" placeholder="Enter employee username" required/>
+
+          <label class="field-label" for="employeeCommittee">Employee Committee</label>
+          <input id="employeeCommittee" type="text" placeholder="Enter employee committee" required/>
+
+          <label class="field-label" for="infractionType">Infraction Type</label>
+          <select id="infractionType" required>
+            <option value="">Select type</option>
+            <option value="misconduct">Misconduct</option>
+            <option value="inactivity">Inactivity</option>
+            <option value="policy violation">Policy Violation</option>
+            <option value="abuse of authority">Abuse of Authority</option>
+            <option value="unprofessional conduct">Unprofessional Conduct</option>
+            <option value="other">Other</option>
+          </select>
+
+          <label class="field-label" for="infractionSummary">Summary</label>
+          <input id="infractionSummary" type="text" placeholder="Short summary" required/>
+
+          <label class="field-label" for="infractionDetails">Detailed Description</label>
+          <textarea id="infractionDetails" rows="6" placeholder="Detailed description" required></textarea>
+
+          <label class="field-label" for="evidenceLink">Evidence Link</label>
+          <input id="evidenceLink" type="url" placeholder="https://..."/>
+
+          <label class="field-label" for="actionTaken">Action Taken</label>
+          <input id="actionTaken" type="text" placeholder="Warning, suspension, etc."/>
+
+          <button id="submitInfractionButton" class="button primary" type="submit">Issue Infraction</button>
+          <div id="infractionFormStatus" class="page-status"></div>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Recorded Infractions</h2>
+        <div id="infractionList" class="stack"></div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { requireAuth, logout } from './js/auth/session.js';
+    import { buildSidebar } from './js/layout/sidebar.js';
+    import { initializeInfractionsPage } from './js/pages/infractions.js';
+
+    const user = requireAuth();
+    buildSidebar(user);
+    await initializeInfractionsPage(user);
+
+    document.getElementById('logoutBtn').onclick = async () => {
+      await logout();
+      window.location.href = 'login.html';
+    };
+  </script>
+</body>
+</html>
