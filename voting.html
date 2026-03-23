@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voting | ICRB Portal</title>
+  <link rel="stylesheet" href="styles/global.css"/>
+  <link rel="stylesheet" href="styles/dashboard.css"/>
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <h2>ICRB</h2>
+      <nav></nav>
+      <button id="logoutBtn">Logout</button>
+    </aside>
+
+    <main class="main-content stack">
+      <section class="card">
+        <div class="eyebrow">General Assembly Voting</div>
+        <h1>Voting</h1>
+        <p class="muted">Members may cast one vote per active voting session. Results are visible immediately in this first version.</p>
+      </section>
+
+      <section id="adminVotingPanel" class="card" hidden>
+        <h2>Admin Voting Controls</h2>
+        <p class="muted">Open a new voting session from an approved policy and close it when voting is complete.</p>
+
+        <form id="openVotingForm" class="stack">
+          <label class="field-label" for="policySelect">Select Policy</label>
+          <select id="policySelect" required>
+            <option value="">Loading approved policies...</option>
+          </select>
+
+          <label class="field-label" for="sessionNotes">Session Notes</label>
+          <textarea id="sessionNotes" rows="4" placeholder="Optional internal notes"></textarea>
+
+          <button class="button primary" id="openVotingButton" type="submit">Open Voting Session</button>
+          <div id="openVotingStatus" class="page-status"></div>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Active Session</h2>
+        <div id="activeVotingSession" class="stack"></div>
+      </section>
+
+      <section class="card">
+        <h2>Recent Sessions</h2>
+        <div id="recentVotingSessions" class="stack"></div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { requireAuth, logout } from './js/auth/session.js';
+    import { buildSidebar } from './js/layout/sidebar.js';
+    import { initializeVotingPage } from './js/pages/voting.js';
+
+    const user = requireAuth();
+    buildSidebar(user);
+    await initializeVotingPage(user);
+
+    document.getElementById('logoutBtn').onclick = async () => {
+      await logout();
+      window.location.href = 'login.html';
+    };
+  </script>
+</body>
+</html>
