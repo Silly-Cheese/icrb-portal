@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Member Management | ICRB Portal</title>
+
+<style>
+body { background:#0b1220; color:white; font-family:Inter,Arial; margin:0; padding:20px; }
+.member-card { background:#121a2b; padding:14px; border-radius:10px; margin-bottom:10px; }
+.member-actions button { margin-top:10px; }
+
+#memberModal {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal-box {
+  background:#121a2b;
+  padding:20px;
+  border-radius:10px;
+  width:400px;
+}
+
+input, select { width:100%; margin-bottom:10px; padding:8px; }
+button { padding:10px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<h2>Member Management (Admin)</h2>
+<input id="memberSearch" placeholder="Search members..." />
+<select id="memberStatusFilter">
+  <option value="all">All</option>
+  <option value="active">Active</option>
+  <option value="suspended">Suspended</option>
+  <option value="terminated">Terminated</option>
+</select>
+
+<div id="membersGrid"></div>
+<div id="membersStatus"></div>
+
+<div id="memberModal" hidden>
+  <div class="modal-box">
+    <h3>Manage Member</h3>
+    <div>ID: <span id="modalMemberId"></span></div>
+
+    <input id="editUsername" placeholder="Username" />
+    <input id="editRole" placeholder="Role" />
+    <input id="editCommittee" placeholder="Committee" />
+    <input id="editCommitteeId" placeholder="Committee ID" />
+
+    <select id="editStatus">
+      <option value="active">Active</option>
+      <option value="suspended">Suspended</option>
+      <option value="terminated">Terminated</option>
+    </select>
+
+    <select id="editAccessStatus">
+      <option value="active">Active</option>
+      <option value="blocked">Blocked</option>
+    </select>
+
+    <label><input type="checkbox" id="editIsAdmin" /> Admin</label>
+    <label><input type="checkbox" id="editIsSuperAdmin" /> Super Admin</label>
+
+    <button id="saveMemberButton">Save</button>
+    <button id="suspendMemberButton">Suspend</button>
+    <button id="reinstateMemberButton">Reinstate</button>
+    <button id="terminateMemberButton">Terminate</button>
+    <button id="revokeAccessButton">Revoke Access</button>
+    <button id="closeModalButton">Close</button>
+  </div>
+</div>
+
+<script type="module">
+import { requireAdminPage } from './js/auth/permissions.js';
+import { loadMemberManagementPage } from './js/pages/member-management.js';
+
+(async () => {
+  const member = await requireAdminPage();
+  if (!member) return;
+
+  await loadMemberManagementPage();
+})();
+</script>
+
+</body>
+</html>
