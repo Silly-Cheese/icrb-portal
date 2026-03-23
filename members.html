@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Members | ICRB Portal</title>
+  <link rel="stylesheet" href="styles/global.css"/>
+  <link rel="stylesheet" href="styles/dashboard.css"/>
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div>
+        <div class="eyebrow">ICRB Portal</div>
+        <h2>Members</h2>
+      </div>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="policies.html">Policies</a>
+        <a href="voting.html">Voting</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="members.html">Members</a>
+        <a href="infractions.html">Infractions</a>
+        <a href="settings.html">Settings</a>
+      </nav>
+      <button id="logoutBtn" class="button secondary">Logout</button>
+    </aside>
+
+    <main class="main-content stack">
+      <section class="card">
+        <div class="eyebrow">Admin Member Management</div>
+        <h1>Members</h1>
+        <p class="lead">This page now exists so your sidebar no longer breaks. It is the cleanup-pass landing page for member administration.</p>
+      </section>
+
+      <section class="grid two-up">
+        <article class="card">
+          <h2>Cleanup Focus</h2>
+          <ul class="list-clean muted">
+            <li>Fix admin session detection</li>
+            <li>Unify layout and spacing</li>
+            <li>Reconnect member tools</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h2>Next Upgrade</h2>
+          <p class="muted">A fuller member manager will be reintroduced in the polished layout during the next pass.</p>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { requireAuth, logout } from './js/auth/session.js';
+    const user = requireAuth();
+    if (!(user?.isAdmin || user?.isSuperAdmin)) {
+      document.body.innerHTML = '<main style="padding:40px;color:white;font-family:Inter,Arial;">Access Denied</main>';
+    }
+    document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+      await logout();
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
