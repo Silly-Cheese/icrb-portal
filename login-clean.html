@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | ICRB General Assembly Portal</title>
+  <link rel="stylesheet" href="styles/global.css"/>
+  <link rel="stylesheet" href="styles/auth.css"/>
+  <style>
+    .auth-shell-clean {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+    }
+
+    .auth-side-clean,
+    .auth-main-clean {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 42px;
+    }
+
+    .auth-side-clean {
+      background:
+        linear-gradient(180deg, rgba(91, 140, 255, 0.12), rgba(91, 140, 255, 0.03)),
+        var(--bg-2);
+      border-right: 1px solid var(--border);
+    }
+
+    .auth-showcase {
+      max-width: 560px;
+    }
+
+    .showcase-badge {
+      width: 76px;
+      height: 76px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      margin-bottom: 22px;
+    }
+
+    .showcase-panel-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .showcase-panel {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .auth-main-clean {
+      background: rgba(10,16,29,0.55);
+    }
+
+    .auth-form-card {
+      width: min(100%, 560px);
+      padding: 30px;
+    }
+
+    .auth-header-row {
+      margin-bottom: 18px;
+    }
+
+    .field-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .helper-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 980px) {
+      .auth-shell-clean {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-side-clean {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="auth-shell-clean">
+    <section class="auth-side-clean">
+      <div class="auth-showcase">
+        <div class="showcase-badge">IC</div>
+        <div class="eyebrow">Official Governance Access</div>
+        <h1>Member Login</h1>
+        <p class="lead">Access the ICRB General Assembly Portal using your Member ID, Committee ID, and password. This cleaned page aligns the entry experience with the polished portal pages.</p>
+
+        <div class="showcase-panel-grid">
+          <div class="showcase-panel">
+            <strong>Hidden Email Authentication</strong>
+            <div class="muted" style="margin-top:8px;">Members never need to enter an email address. The portal handles the Firebase email mapping behind the scenes.</div>
+          </div>
+          <div class="showcase-panel">
+            <strong>Role-Aware Access</strong>
+            <div class="muted" style="margin-top:8px;">Administrative pages are revealed only to eligible users while standard members see the tools relevant to them.</div>
+          </div>
+          <div class="showcase-panel">
+            <strong>Governance Toolkit</strong>
+            <div class="muted" style="margin-top:8px;">Policies, voting, analytics, and employee oversight are all connected inside one structured portal.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="auth-main-clean">
+      <div class="card auth-form-card">
+        <div class="auth-header-row">
+          <div class="eyebrow">Sign In</div>
+          <h2 style="margin:0 0 8px;">Welcome Back</h2>
+          <p class="muted" style="margin:0;">Enter your member credentials to continue into the portal.</p>
+        </div>
+
+        <form id="loginForm" class="field-stack">
+          <div>
+            <label class="field-label" for="memberId">Member ID</label>
+            <input id="memberId" name="memberId" type="text" placeholder="Enter Member ID" required/>
+          </div>
+
+          <div>
+            <label class="field-label" for="committeeId">Committee ID</label>
+            <input id="committeeId" name="committeeId" type="text" placeholder="Enter Committee ID" required/>
+          </div>
+
+          <div>
+            <label class="field-label" for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="Enter Password" required/>
+          </div>
+
+          <button id="loginButton" class="button primary" type="submit">Sign In</button>
+          <div id="loginStatus" class="page-status"></div>
+        </form>
+
+        <div class="helper-row">
+          <a href="index.html">Return to Home</a>
+          <a href="signup-clean.html">Need account setup?</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { loginMember } from './js/auth/login.js';
+
+    const form = document.getElementById('loginForm');
+    const button = document.getElementById('loginButton');
+    const status = document.getElementById('loginStatus');
+
+    function showStatus(message, isError = false) {
+      status.textContent = message;
+      status.className = isError ? 'page-status error' : 'page-status success';
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      button.disabled = true;
+      showStatus('Signing in...');
+
+      try {
+        await loginMember({
+          memberId: form.memberId.value.trim(),
+          committeeId: form.committeeId.value.trim(),
+          password: form.password.value
+        });
+
+        showStatus('Login successful. Redirecting...');
+        window.location.href = 'dashboard-clean.html';
+      } catch (error) {
+        console.error(error);
+        showStatus(error.message || 'Unable to sign in.', true);
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
