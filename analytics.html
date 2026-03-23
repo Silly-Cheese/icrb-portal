@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Analytics | ICRB Portal</title>
+  <link rel="stylesheet" href="styles/global.css"/>
+  <link rel="stylesheet" href="styles/dashboard.css"/>
+  <link rel="stylesheet" href="styles/analytics.css"/>
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <h2>ICRB</h2>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="policies.html">Policies</a>
+        <a href="voting.html">Voting</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="members.html">Members</a>
+        <a href="infractions.html">Infractions</a>
+        <a href="settings.html">Settings</a>
+      </nav>
+      <button id="logoutBtn">Logout</button>
+    </aside>
+
+    <main class="main-content stack">
+      <section class="card">
+        <div class="eyebrow">Portal Intelligence</div>
+        <h1>Analytics Dashboard</h1>
+        <p class="muted">A live overview of policy activity, voting participation, and employee infraction trends across the portal.</p>
+      </section>
+
+      <section class="analytics-grid">
+        <article class="card stat-card">
+          <div class="stat-label">Total Policies</div>
+          <div id="totalPolicies" class="stat-value">0</div>
+        </article>
+        <article class="card stat-card">
+          <div class="stat-label">Approved Policies</div>
+          <div id="approvedPolicies" class="stat-value">0</div>
+        </article>
+        <article class="card stat-card">
+          <div class="stat-label">Open Voting Sessions</div>
+          <div id="openVotingSessions" class="stat-value">0</div>
+        </article>
+        <article class="card stat-card">
+          <div class="stat-label">Recorded Infractions</div>
+          <div id="totalInfractions" class="stat-value">0</div>
+        </article>
+      </section>
+
+      <section class="analytics-grid two-columns">
+        <article class="card">
+          <h2>Policy Status Breakdown</h2>
+          <div id="policyBreakdown" class="stack"></div>
+        </article>
+        <article class="card">
+          <h2>Vote Totals</h2>
+          <div id="voteBreakdown" class="stack"></div>
+        </article>
+      </section>
+
+      <section class="analytics-grid two-columns">
+        <article class="card">
+          <h2>Committee Submission Activity</h2>
+          <div id="committeeBreakdown" class="stack"></div>
+        </article>
+        <article class="card">
+          <h2>Infraction Type Breakdown</h2>
+          <div id="infractionBreakdown" class="stack"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { requireAuth, logout } from './js/auth/session.js';
+    import { initializeAnalyticsPage } from './js/pages/analytics.js';
+
+    const user = requireAuth();
+    await initializeAnalyticsPage(user);
+
+    document.getElementById('logoutBtn').onclick = async () => {
+      await logout();
+      window.location.href = 'login.html';
+    };
+  </script>
+</body>
+</html>
