@@ -1,0 +1,36 @@
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  background: var(--panel-strong);
+  border-right: 1px solid var(--border);
+  padding: 20px;
+}
+
+.sidebar h2 {
+  margin-top: 0;
+}
+
+.sidebar nav {
+  display: grid;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.sidebar nav a {
+  padding: 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.sidebar nav a:hover {
+  background: rgba(91,140,255,0.15);
+}
+
+.main-content {
+  padding: 28px;
+}
