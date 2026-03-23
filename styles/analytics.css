@@ -1,0 +1,43 @@
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.analytics-grid.two-columns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.stat-card {
+  min-height: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.stat-value {
+  font-size: 42px;
+  font-weight: 800;
+  margin-top: 10px;
+}
+
+@media (max-width: 1100px) {
+  .analytics-grid,
+  .analytics-grid.two-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .analytics-grid,
+  .analytics-grid.two-columns {
+    grid-template-columns: 1fr;
+  }
+}
