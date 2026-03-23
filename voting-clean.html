@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voting | ICRB General Assembly Portal</title>
+  <link rel="stylesheet" href="styles/global.css"/>
+  <link rel="stylesheet" href="styles/dashboard.css"/>
+  <link rel="stylesheet" href="styles/voting.css"/>
+  <style>
+    .voting-header-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+    }
+
+    .summary-chip-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .summary-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      font-size: 13px;
+    }
+
+    .voting-session-card {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .session-top-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .session-top-row h3 {
+      margin: 0 0 6px;
+    }
+
+    .session-status-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: capitalize;
+    }
+
+    .session-status-chip.open {
+      background: rgba(42, 196, 134, 0.12);
+      border: 1px solid rgba(42, 196, 134, 0.24);
+      color: #9df0ca;
+    }
+
+    .session-status-chip.closed {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .vote-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .vote-summary-box {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .vote-summary-label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .vote-summary-box strong {
+      font-size: 26px;
+    }
+
+    .vote-button-row,
+    .vote-admin-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .vote-notice {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(91, 140, 255, 0.12);
+      border: 1px solid rgba(123, 162, 255, 0.22);
+      color: #cfe0ff;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1000px) {
+      .voting-header-grid,
+      .vote-summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div>
+        <div class="eyebrow">ICRB General Assembly Portal</div>
+        <h2>Voting</h2>
+        <p class="muted">Legislative voting and session control.</p>
+      </div>
+      <nav>
+        <a href="dashboard-clean.html">Dashboard</a>
+        <a href="policies.html">Policies</a>
+        <a href="voting-clean.html" class="active">Voting</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="members.html">Members</a>
+        <a href="infractions-clean.html">Infractions</a>
+        <a href="settings.html">Settings</a>
+      </nav>
+      <button id="logoutBtn" class="button secondary">Logout</button>
+    </aside>
+
+    <main class="main-content stack">
+      <section class="voting-header-grid">
+        <article class="card">
+          <div class="eyebrow">General Assembly Voting</div>
+          <h1>Voting</h1>
+          <p class="lead">This cleanup-pass voting screen provides a cleaner layout, stronger vote visibility, and secured one-vote-per-member behavior with close-session controls for admins.</p>
+          <div class="summary-chip-row" id="votingTotals"></div>
+        </article>
+
+        <article id="adminVotingPanel" class="card" hidden>
+          <div class="eyebrow">Admin Voting Controls</div>
+          <h2 style="margin-top:0;">Open Voting Session</h2>
+          <form id="openVotingForm" class="stack" style="margin-top:16px;">
+            <div>
+              <label class="field-label" for="policySelect">Approved Policy</label>
+              <select id="policySelect" required>
+                <option value="">Loading approved policies...</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label" for="sessionNotes">Session Notes</label>
+              <textarea id="sessionNotes" rows="4" placeholder="Optional internal notes"></textarea>
+            </div>
+            <button class="button primary" id="openVotingButton" type="submit">Open Voting Session</button>
+            <div id="openVotingStatus" class="page-status"></div>
+          </form>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Open Sessions</div>
+        <h2>Active Voting Session</h2>
+        <div id="activeVotingSession" class="stack" style="margin-top:16px;"></div>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Session Archive</div>
+        <h2>Recent Sessions</h2>
+        <div id="recentVotingSessions" class="stack" style="margin-top:16px;"></div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { requireAuth, logout } from './js/auth/session.js';
+    import { initializeVotingCleanPage } from './js/pages/voting-clean.js';
+
+    const user = requireAuth();
+    await initializeVotingCleanPage(user);
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await logout();
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
