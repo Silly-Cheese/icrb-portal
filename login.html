@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | ICRB General Assembly Portal</title>
+  <style>
+    :root {
+      --bg: #09111f;
+      --panel: rgba(18, 26, 43, 0.9);
+      --border: #243149;
+      --text: #ecf1ff;
+      --muted: #9aa8c7;
+      --accent: #5b8cff;
+      --accent-2: #7ba2ff;
+      --danger: #ff7272;
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+      font-family: Inter, Arial, Helvetica, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(91, 140, 255, 0.2), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(123, 162, 255, 0.14), transparent 25%),
+        var(--bg);
+    }
+
+    .auth-shell {
+      width: min(100%, 1120px);
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      background: rgba(9, 17, 31, 0.82);
+      backdrop-filter: blur(14px);
+    }
+
+    .auth-brand {
+      padding: 48px;
+      background:
+        linear-gradient(180deg, rgba(91, 140, 255, 0.12), rgba(91, 140, 255, 0.02)),
+        linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-right: 1px solid var(--border);
+    }
+
+    .auth-card {
+      padding: 48px;
+      background: var(--panel);
+    }
+
+    .brand-mark {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      margin-bottom: 22px;
+    }
+
+    h1, h2, p { margin-top: 0; }
+
+    .muted {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .feature-item {
+      padding: 16px 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #dce6ff;
+      letter-spacing: 0.02em;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      padding: 14px 16px;
+      border-radius: 14px;
+      outline: none;
+      font-size: 14px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus {
+      border-color: rgba(123, 162, 255, 0.65);
+      box-shadow: 0 0 0 4px rgba(91, 140, 255, 0.15);
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      padding: 15px 18px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 12px 30px rgba(91, 140, 255, 0.22);
+    }
+
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .status {
+      min-height: 22px;
+      margin: 14px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .status.error {
+      color: var(--danger);
+    }
+
+    .links {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 22px;
+      flex-wrap: wrap;
+    }
+
+    .links a {
+      color: #bfd0ff;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 920px) {
+      .auth-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-brand {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="auth-brand">
+      <div class="brand-mark">IC</div>
+      <h1>ICRB General Assembly Portal</h1>
+      <p class="muted">
+        Official governance and administrative access point for the International Committee of Roblox Businesses.
+      </p>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          Member-based authentication using Member ID and Committee ID.
+        </div>
+        <div class="feature-item">
+          Role-based administrative access for governance operations.
+        </div>
+        <div class="feature-item">
+          Policy tracking, controlled voting, and internal oversight systems.
+        </div>
+      </div>
+    </section>
+
+    <section class="auth-card">
+      <h2>Member Login</h2>
+      <p class="muted">Enter your Member ID, Committee ID, and password to continue.</p>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="memberId">Member ID</label>
+          <input id="memberId" name="memberId" type="text" autocomplete="username" required />
+        </div>
+
+        <div class="field">
+          <label for="committeeId">Committee ID</label>
+          <input id="committeeId" name="committeeId" type="text" required />
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required />
+        </div>
+
+        <button id="loginButton" type="submit">Sign In</button>
+        <div id="statusMessage" class="status"></div>
+      </form>
+
+      <div class="links">
+        <a href="index.html">Return to Portal Shell</a>
+        <a href="#">Need account setup?</a>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { login } from './js/auth/login.js';
+
+    const form = document.getElementById('loginForm');
+    const loginButton = document.getElementById('loginButton');
+    const statusMessage = document.getElementById('statusMessage');
+
+    function showStatus(message, isError = false) {
+      statusMessage.textContent = message;
+      statusMessage.className = isError ? 'status error' : 'status';
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      loginButton.disabled = true;
+      showStatus('Signing in...');
+
+      const memberId = form.memberId.value.trim();
+      const committeeId = form.committeeId.value.trim();
+      const password = form.password.value;
+
+      try {
+        const result = await login(memberId, committeeId, password);
+        localStorage.setItem('icrbMemberSession', JSON.stringify({
+          uid: result.user.uid,
+          memberId: result.member.memberId,
+          username: result.member.username,
+          role: result.member.role,
+          committee: result.member.committee,
+          isAdmin: !!result.member.isAdmin,
+          isSuperAdmin: !!result.member.isSuperAdmin
+        }));
+
+        showStatus('Login successful. Redirecting...');
+        window.location.href = 'index.html';
+      } catch (error) {
+        showStatus(error.message || 'Unable to sign in.', true);
+      } finally {
+        loginButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
