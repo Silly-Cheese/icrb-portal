@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Policies | ICRB General Assembly Portal</title>
+  <link rel="stylesheet" href="styles/global.css"/>
+  <link rel="stylesheet" href="styles/dashboard.css"/>
+  <style>
+    .policies-header-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+    }
+
+    .summary-chip-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .summary-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      font-size: 13px;
+    }
+
+    .policy-record-card {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .policy-record-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .policy-record-top h3 {
+      margin: 0 0 6px;
+    }
+
+    .policy-status-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: capitalize;
+    }
+
+    .policy-status-chip.pending {
+      background: rgba(255, 204, 102, 0.12);
+      border: 1px solid rgba(255, 204, 102, 0.24);
+      color: #ffe1a0;
+    }
+
+    .policy-status-chip.approved {
+      background: rgba(42, 196, 134, 0.12);
+      border: 1px solid rgba(42, 196, 134, 0.24);
+      color: #9df0ca;
+    }
+
+    .policy-status-chip.rejected {
+      background: rgba(255, 114, 114, 0.12);
+      border: 1px solid rgba(255, 114, 114, 0.22);
+      color: #ffb3b3;
+    }
+
+    .policy-status-chip.voting {
+      background: rgba(91, 140, 255, 0.12);
+      border: 1px solid rgba(123, 162, 255, 0.24);
+      color: #cfe0ff;
+    }
+
+    .policy-record-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .policy-record-grid > div,
+    .record-section {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .record-label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .policy-action-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .form-grid-clean {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .full-span {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 1000px) {
+      .policies-header-grid,
+      .form-grid-clean,
+      .policy-record-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div>
+        <div class="eyebrow">ICRB General Assembly Portal</div>
+        <h2>Policies</h2>
+        <p class="muted">Submission, review, and legislative preparation.</p>
+      </div>
+      <nav>
+        <a href="dashboard-clean.html">Dashboard</a>
+        <a href="policies-clean.html" class="active">Policies</a>
+        <a href="voting-clean.html">Voting</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="members.html">Members</a>
+        <a href="infractions-clean.html">Infractions</a>
+        <a href="settings.html">Settings</a>
+      </nav>
+      <button id="logoutBtn" class="button secondary">Logout</button>
+    </aside>
+
+    <main class="main-content stack">
+      <section class="policies-header-grid">
+        <article class="card">
+          <div class="eyebrow">Policy Submission</div>
+          <h1>Policies</h1>
+          <p class="lead">This cleanup-pass replacement gives policy submissions a more polished administrative layout and cleaner review controls for admins.</p>
+          <div class="summary-chip-row" id="policyTotals"></div>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">Submit Policy</div>
+          <h2 style="margin-top:0;">New Submission</h2>
+          <form id="policyForm" class="stack" style="margin-top:16px;">
+            <div class="form-grid-clean">
+              <div class="full-span">
+                <label class="field-label" for="policyTitle">Policy Title</label>
+                <input id="policyTitle" name="policyTitle" type="text" placeholder="Enter policy title" required/>
+              </div>
+              <div>
+                <label class="field-label" for="policyCategory">Category of Policy</label>
+                <select id="policyCategory" name="policyCategory" required>
+                  <option value="">Select category</option>
+                  <option value="General Policy">General Policy</option>
+                  <option value="Employment Termination Policy/Recommendation">Employment Termination Policy/Recommendation</option>
+                  <option value="Emergency Policy">Emergency Policy</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label" for="submittingCommittee">Committee Submitting It</label>
+                <select id="submittingCommittee" name="submittingCommittee" required>
+                  <option value="">Select committee</option>
+                  <option value="Executive Authority">Executive Authority</option>
+                  <option value="Accreditation">Accreditation</option>
+                  <option value="Compliance">Compliance</option>
+                  <option value="Employment">Employment</option>
+                  <option value="Audit">Audit</option>
+                  <option value="Relations">Relations</option>
+                  <option value="Certification">Certification</option>
+                  <option value="Judicial and Appeals">Judicial and Appeals</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="full-span">
+                <label class="field-label" for="policySummary">Detailed Summary</label>
+                <textarea id="policySummary" name="policySummary" rows="6" placeholder="Provide a detailed policy summary" required></textarea>
+              </div>
+              <div class="full-span">
+                <label class="field-label" for="googleDocLink">Google Document Policy Link</label>
+                <input id="googleDocLink" name="googleDocLink" type="url" placeholder="https://docs.google.com/..." required/>
+              </div>
+            </div>
+            <button id="submitPolicyButton" class="button primary" type="submit">Submit Policy</button>
+            <div id="policyFormStatus" class="page-status"></div>
+          </form>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Submission Log</div>
+        <h2>Submitted Policies</h2>
+        <div id="policyList" class="stack" style="margin-top:16px;"></div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { requireAuth, logout } from './js/auth/session.js';
+    import { initializePoliciesCleanPage } from './js/pages/policies-clean.js';
+
+    const user = requireAuth();
+    await initializePoliciesCleanPage(user);
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await logout();
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
