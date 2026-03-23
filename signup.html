@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Signup | ICRB General Assembly Portal</title>
+  <link rel="stylesheet" href="styles/global.css"/>
+  <link rel="stylesheet" href="styles/auth.css"/>
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="auth-brand-panel">
+      <div class="brand-badge">IC</div>
+      <div class="eyebrow">Official Governance Access</div>
+      <h1>Create Account</h1>
+      <p class="lead">Activate your portal access using your Member ID and Committee ID, then create your password.</p>
+      <div class="stack small-gap muted">
+        <div>• Instant signup for eligible members</div>
+        <div>• Hidden Firebase email authentication</div>
+        <div>• Secure linkage to your portal member record</div>
+      </div>
+    </section>
+
+    <section class="auth-card-panel">
+      <div class="card auth-card wide-card">
+        <h2>Account Setup</h2>
+        <p class="muted">Only eligible active members with portal access can complete account creation.</p>
+
+        <form id="signupForm" class="stack">
+          <label class="field-label" for="memberId">Member ID</label>
+          <input id="memberId" name="memberId" type="text" placeholder="Enter Member ID" required/>
+
+          <label class="field-label" for="committeeId">Committee ID</label>
+          <input id="committeeId" name="committeeId" type="text" placeholder="Enter Committee ID" required/>
+
+          <label class="field-label" for="password">Create Password</label>
+          <input id="password" name="password" type="password" placeholder="Create Password" minlength="6" required/>
+
+          <label class="field-label" for="confirmPassword">Confirm Password</label>
+          <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm Password" minlength="6" required/>
+
+          <button id="signupButton" class="button primary" type="submit">Create Account</button>
+          <div id="signupStatus" class="page-status"></div>
+        </form>
+
+        <div class="auth-links-row">
+          <a href="index.html">Return to Home</a>
+          <a href="login.html">Already have an account?</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { signupMember } from './js/auth/signup.js';
+
+    const form = document.getElementById('signupForm');
+    const button = document.getElementById('signupButton');
+    const status = document.getElementById('signupStatus');
+
+    const showStatus = (message, isError = false) => {
+      status.textContent = message;
+      status.className = isError ? 'page-status error' : 'page-status';
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (form.password.value !== form.confirmPassword.value) {
+        showStatus('Passwords do not match.', true);
+        return;
+      }
+
+      button.disabled = true;
+      showStatus('Creating account...');
+
+      try {
+        await signupMember({
+          memberId: form.memberId.value.trim(),
+          committeeId: form.committeeId.value.trim(),
+          password: form.password.value
+        });
+
+        showStatus('Account created successfully. Redirecting to login...');
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 1200);
+      } catch (error) {
+        console.error(error);
+        showStatus(error.message || 'Unable to create account.', true);
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
