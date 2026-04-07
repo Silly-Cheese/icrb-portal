@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ICRB Portal | International Committee of Roblox Businesses</title>
+  <title>ICRB Portal | Secure Access</title>
   <meta
     name="description"
-    content="Official portal for the International Committee of Roblox Businesses. Governance, accreditation, business standing, and oversight."
+    content="Secure access portal for the International Committee of Roblox Businesses."
   />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,225 +16,112 @@
   />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
-  <div class="background-orb orb-one"></div>
-  <div class="background-orb orb-two"></div>
-  <div class="background-grid"></div>
+<body class="auth-body">
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <div class="bg-grid"></div>
 
   <div id="toastContainer" class="toast-container"></div>
 
-  <div class="site-shell">
-    <header class="topbar">
-      <div class="brand-block">
-        <div class="brand-mark">ICRB</div>
-        <div class="brand-copy">
-          <h1>ICRB Portal</h1>
-          <p>International Committee of Roblox Businesses</p>
+  <main class="auth-layout">
+    <section class="auth-brand-card glass-card">
+      <div class="brand-badge">ICRB</div>
+      <div class="eyebrow">International Committee of Roblox Businesses</div>
+      <h1>Professional oversight begins with secure access.</h1>
+      <p>
+        This portal supports accreditation records, employee administration, business standing,
+        and ownership-level operational visibility for ICRB.
+      </p>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          <span class="feature-title">Business Oversight</span>
+          <span class="feature-copy">Track accredited businesses, standing, and status.</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-title">Employee Management</span>
+          <span class="feature-copy">Create employee records, assign roles, and manage status.</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-title">Owner Bootstrap</span>
+          <span class="feature-copy">Complete first-run owner setup securely for initial access.</span>
         </div>
       </div>
+    </section>
 
-      <div class="topbar-actions">
-        <span id="sessionBadge" class="session-badge">Guest Session</span>
-        <button id="refreshBtn" class="btn btn-secondary" type="button">Refresh Data</button>
-      </div>
-    </header>
+    <section class="auth-panel-stack">
+      <section class="glass-card auth-card">
+        <div class="panel-top">
+          <div>
+            <div class="section-kicker">Secure Login</div>
+            <h2>Portal Sign In</h2>
+            <p>Authorized owners, administrators, and employees may sign in here.</p>
+          </div>
+        </div>
 
-    <main class="layout-grid">
-      <section class="main-column">
-        <section class="hero-card glass-card">
-          <div class="hero-text">
-            <div class="eyebrow">Governance • Accreditation • Professional Oversight</div>
-            <h2>Professional infrastructure for recognized Roblox business oversight.</h2>
-            <p>
-              The ICRB Portal provides a formal environment for business accreditation, standing review,
-              and ownership-level administrative visibility. This build is structured for GitHub Pages
-              with Firebase powering authentication and Firestore-backed records.
-            </p>
-
-            <div class="hero-actions">
-              <button id="openBootstrapBtn" class="btn btn-primary" type="button">Bootstrap Owner Access</button>
-              <button id="scrollBusinessesBtn" class="btn btn-ghost" type="button">View Businesses</button>
-            </div>
+        <div class="form-stack">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" type="email" placeholder="Enter account email" />
           </div>
 
-          <div class="hero-stats">
-            <div class="stat-card">
-              <span>Total Businesses</span>
-              <strong id="statTotalBusinesses">0</strong>
-            </div>
-            <div class="stat-card">
-              <span>Accredited</span>
-              <strong id="statAccredited">0</strong>
-            </div>
-            <div class="stat-card">
-              <span>Good / Excellent</span>
-              <strong id="statGoodStanding">0</strong>
-            </div>
-          </div>
-        </section>
-
-        <section class="content-grid">
-          <div class="glass-card panel">
-            <div class="panel-header">
-              <div>
-                <h3>System Status</h3>
-                <p>Portal readiness, Firebase initialization, and collection bootstrap state.</p>
-              </div>
-            </div>
-
-            <div id="systemStatus" class="status-banner info">
-              Initializing portal systems...
-            </div>
-
-            <div class="info-grid">
-              <div class="info-item">
-                <span>Authentication</span>
-                <strong id="authStatusValue">Pending</strong>
-              </div>
-              <div class="info-item">
-                <span>Firestore Setup</span>
-                <strong id="firestoreStatusValue">Pending</strong>
-              </div>
-              <div class="info-item">
-                <span>Signed-In User</span>
-                <strong id="signedInUserValue">None</strong>
-              </div>
-              <div class="info-item">
-                <span>Privilege Level</span>
-                <strong id="roleValue">Guest</strong>
-              </div>
-            </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input id="loginPassword" type="password" placeholder="Enter password" />
           </div>
 
-          <div id="businessesSection" class="glass-card panel">
-            <div class="panel-header">
-              <div>
-                <h3>Accredited Businesses</h3>
-                <p>Current accreditation records, status, standing, and administrative notes.</p>
-              </div>
-            </div>
-
-            <div class="search-row">
-              <input
-                id="businessSearch"
-                class="search-input"
-                type="text"
-                placeholder="Search by business name, status, or standing..."
-              />
-            </div>
-
-            <div id="businessList" class="business-list">
-              <div class="empty-state">
-                <h4>No business records loaded yet.</h4>
-                <p>Once businesses are created in Firestore, they will appear here.</p>
-              </div>
-            </div>
-          </div>
-        </section>
+          <button id="loginBtn" class="btn btn-primary btn-full" type="button">Sign In</button>
+          <div id="loginMessage" class="inline-message muted">Awaiting sign in.</div>
+        </div>
       </section>
 
-      <aside class="sidebar-column">
-        <section id="bootstrapPanel" class="glass-card panel">
-          <div class="panel-header">
-            <div>
-              <h3>Owner Bootstrap</h3>
-              <p>Temporary setup path for first owner account creation.</p>
-            </div>
+      <section class="glass-card auth-card">
+        <div class="panel-top">
+          <div>
+            <div class="section-kicker">First Run Only</div>
+            <h2>Owner Bootstrap</h2>
+            <p>Use this once to create the initial Owner account for the portal.</p>
+          </div>
+        </div>
+
+        <div class="notice-box">
+          After setup is complete, change the bootstrap key in the code and lock down Firestore rules.
+        </div>
+
+        <div class="form-stack">
+          <div class="form-group">
+            <label for="bootstrapKey">Bootstrap Key</label>
+            <input id="bootstrapKey" type="password" placeholder="Enter bootstrap key" />
           </div>
 
-          <div class="notice-box">
-            Use this only for the initial owner creation process. After successful setup, disable or
-            rotate the bootstrap key and tighten Firebase rules.
+          <div class="form-group">
+            <label for="ownerMemberId">Owner Member ID</label>
+            <input id="ownerMemberId" type="text" placeholder="EX: EXEC_EAGLE_001" />
           </div>
 
-          <div class="form-stack">
-            <div class="form-group">
-              <label for="bootstrapKey">Bootstrap Key</label>
-              <input id="bootstrapKey" type="password" placeholder="Enter temporary bootstrap key" />
-            </div>
-
-            <div class="form-group">
-              <label for="ownerMemberId">Owner Member ID</label>
-              <input id="ownerMemberId" type="text" placeholder="EX: EXEC_EAGLE_001" />
-            </div>
-
-            <div class="form-group">
-              <label for="ownerUsername">Owner Username</label>
-              <input id="ownerUsername" type="text" placeholder="EX: Executive_Eagle" />
-            </div>
-
-            <div class="form-group">
-              <label for="ownerEmail">Owner Email</label>
-              <input id="ownerEmail" type="email" placeholder="owner@icrb.local" />
-            </div>
-
-            <div class="form-group">
-              <label for="ownerPassword">Owner Password</label>
-              <input id="ownerPassword" type="password" placeholder="Create secure password" />
-            </div>
-
-            <button id="bootstrapSubmitBtn" class="btn btn-primary btn-full" type="button">
-              Create Owner Account
-            </button>
-
-            <div id="bootstrapResult" class="inline-message muted">
-              Awaiting bootstrap submission.
-            </div>
-          </div>
-        </section>
-
-        <section class="glass-card panel">
-          <div class="panel-header">
-            <div>
-              <h3>Add Business Record</h3>
-              <p>Owner and admin controlled creation of accredited business records.</p>
-            </div>
+          <div class="form-group">
+            <label for="ownerUsername">Owner Username</label>
+            <input id="ownerUsername" type="text" placeholder="EX: Executive_Eagle" />
           </div>
 
-          <div class="form-stack">
-            <div class="form-group">
-              <label for="businessName">Business Name</label>
-              <input id="businessName" type="text" placeholder="Business name" />
-            </div>
-
-            <div class="form-group">
-              <label for="businessStatus">Accreditation Status</label>
-              <select id="businessStatus">
-                <option value="Accredited">Accredited</option>
-                <option value="Under Review">Under Review</option>
-                <option value="Suspended">Suspended</option>
-                <option value="Revoked">Revoked</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="businessStanding">Standing</label>
-              <select id="businessStanding">
-                <option value="Excellent">Excellent</option>
-                <option value="Good">Good</option>
-                <option value="Neutral">Neutral</option>
-                <option value="Probationary">Probationary</option>
-                <option value="Sanctioned">Sanctioned</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="businessNotes">Administrative Notes</label>
-              <textarea id="businessNotes" rows="5" placeholder="Administrative notes"></textarea>
-            </div>
-
-            <button id="addBusinessBtn" class="btn btn-success btn-full" type="button">
-              Create Business Record
-            </button>
-
-            <div id="businessResult" class="inline-message muted">
-              Waiting for business submission.
-            </div>
+          <div class="form-group">
+            <label for="ownerEmail">Owner Email</label>
+            <input id="ownerEmail" type="email" placeholder="owner@icrb.local" />
           </div>
-        </section>
-      </aside>
-    </main>
-  </div>
+
+          <div class="form-group">
+            <label for="ownerPassword">Owner Password</label>
+            <input id="ownerPassword" type="password" placeholder="Create secure password" />
+          </div>
+
+          <button id="bootstrapBtn" class="btn btn-secondary btn-full" type="button">
+            Create Owner Account
+          </button>
+          <div id="bootstrapMessage" class="inline-message muted">Awaiting bootstrap submission.</div>
+        </div>
+      </section>
+    </section>
+  </main>
 
   <script type="module" src="app.js"></script>
 </body>
