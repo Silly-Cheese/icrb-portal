@@ -6,12 +6,16 @@ import {
   getDoc,
   getDocs,
   setDoc,
+  updateDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 import {
   getAuth,
+  browserLocalPersistence,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  setPersistence,
+  signInWithEmailAndPassword,
   signOut
 } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
@@ -28,6 +32,8 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+await setPersistence(auth, browserLocalPersistence);
+
 export {
   auth,
   db,
@@ -39,5 +45,7 @@ export {
   onAuthStateChanged,
   serverTimestamp,
   setDoc,
-  signOut
+  signInWithEmailAndPassword,
+  signOut,
+  updateDoc
 };
