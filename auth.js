@@ -1,103 +1,85 @@
-import {
-  auth,
-  collection,
-  createUserWithEmailAndPassword,
-  db,
-  doc,
-  getDocs,
-  serverTimestamp,
-  setDoc,
-  signInWithEmailAndPassword,
-  signOut
-} from "./firebase.js";
+import { auth, onAuthStateChanged } from "./firebase.js";
+import { bootstrapOwnerAccount, loginUser } from "./auth.js";
+import { ensureBaseCollections } from "./business.js";
+import { setInlineMessage, showToast } from "./ui.js";
 
-const BOOTSTRAP_KEY = "ICRB-EXECUTIVE";
+function bindLogin() {
+  const loginBtn = document.getElementById("loginBtn");
 
-export async function loginUser(email, password) {
-  const normalizedEmail = String(email || "").trim().toLowerCase();
-  const normalizedPassword = String(password || "");
+  loginBtn?.addEventListener("click", async () => {
+    const email = document.getElementById("loginEmail")?.value || "";
+    const password = document.getElementById("loginPassword")?.value || "";
 
-  if (!normalizedEmail || !normalizedPassword) {
-    throw new Error("Email and password are required.");
-  }
+    try {
+      loginBtn.disabled = true;
+      setInlineMessage("loginMessage", "Signing in...", "muted");
 
-  const result = await signInWithEmailAndPassword(auth, normalizedEmail, normalizedPassword);
-  return result.user;
+      await loginUser(email, password);
+
+      setInlineMessage("loginMessage", "Sign in successful. Redirecting...", "success");
+      showToast("Sign in successful.", "success");
+      window.location.href = "./portal.html";
+    } catch (error) {
+      console.error(error);
+      setInlineMessage("loginMessage", error.message || "Sign in failed.", "error");
+      showToast(error.message || "Sign in failed.", "error");
+    } finally {
+      loginBtn.disabled = false;
+    }
+  });
 }
 
-export async function logoutUser() {
-  await signOut(auth);
+function bindBootstrap() {
+  const bootstrapBtn = document.getElementById("bootstrapBtn");
+
+  bootstrapBtn?.addEventListener("click", async () => {
+    const bootstrapKey = document.getElementById("bootstrapKey")?.value || "";
+    const memberId = document.getElementById("ownerMemberId")?.value || "";
+    const username = document.getElementById("ownerUsername")?.value || "";
+    const email = document.getElementById("ownerEmail")?.value || "";
+    const password = document.getElementById("ownerPassword")?.value || "";
+
+    try {
+      bootstrapBtn.disabled = true;
+      setInlineMessage("bootstrapMessage", "Creating owner account...", "muted");
+
+      await bootstrapOwnerAccount({
+        bootstrapKey,
+        memberId,
+        username,
+        email,
+        password
+      });
+
+      setInlineMessage("bootstrapMessage", "Owner account created successfully. Redirecting...", "success");
+      showToast("Owner account created successfully.", "success");
+      window.location.href = "./portal.html";
+    } catch (error) {
+      console.error(error);
+      setInlineMessage("bootstrapMessage", error.message || "Bootstrap failed.", "error");
+      showToast(error.message || "Bootstrap failed.", "error");
+    } finally {
+      bootstrapBtn.disabled = false;
+    }
+  });
 }
 
-export async function bootstrapOwnerAccount({
-  bootstrapKey,
-  memberId,
-  username,
-  email,
-  password
-}) {
-  const normalizedKey = String(bootstrapKey || "").trim();
-  const normalizedMemberId = String(memberId || "").trim();
-  const normalizedUsername = String(username || "").trim();
-  const normalizedEmail = String(email || "").trim().toLowerCase();
-  const normalizedPassword = String(password || "");
-
-  if (!normalizedKey || !normalizedMemberId || !normalizedUsername || !normalizedEmail || !normalizedPassword) {
-    throw new Error("All bootstrap fields are required.");
+async function initialize() {
+  try {
+    await ensureBaseCollections();
+  } catch (error) {
+    console.error(error);
+    showToast(error.message || "Initialization failed.", "error");
   }
 
-  if (normalizedKey !== BOOTSTRAP_KEY) {
-    throw new Error("Invalid bootstrap key.");
-  }
-
-  if (normalizedPassword.length < 6) {
-    throw new Error("Password must be at least 6 characters.");
-  }
-
-  const authResult = await createUserWithEmailAndPassword(auth, normalizedEmail, normalizedPassword);
-
-  await setDoc(doc(db, "members", normalizedMemberId), {
-    memberId: normalizedMemberId,
-    username: normalizedUsername,
-    email: normalizedEmail,
-    authUid: authResult.user.uid,
-    role: "Owner",
-    status: "Active",
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp()
-  });
-
-  await setDoc(doc(db, "settings", "ownerBootstrap"), {
-    enabled: false,
-    completed: true,
-    ownerMemberId: normalizedMemberId,
-    ownerUsername: normalizedUsername,
-    completedAt: serverTimestamp(),
-    updatedAt: serverTimestamp()
-  });
-
-  await setDoc(doc(db, "auditLogs", `bootstrap_${Date.now()}`), {
-    type: "OWNER_BOOTSTRAP_COMPLETED",
-    memberId: normalizedMemberId,
-    username: normalizedUsername,
-    email: normalizedEmail,
-    createdAt: serverTimestamp()
-  });
-
-  return authResult.user;
-}
-
-export async function getMemberByAuthUid(authUid) {
-  const snapshot = await getDocs(collection(db, "members"));
-  let matchedMember = null;
-
-  snapshot.forEach((entry) => {
-    if (entry.id === "_init") return;
-    const data = entry.data();
-    if (data.authUid === authUid) {
-      matchedMember = { id: entry.id, ...data };
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      window.location.href = "./portal.html";
     }
   });
 
-  return matchedMember;
+  bindLogin();
+  bindBootstrap();
 }
+
+document.addEventListener("DOMContentLoaded", initialize);
