@@ -2,37 +2,29 @@
 
 Official portal for the International Committee of Roblox Businesses.
 
-## Stack
-
-- GitHub Pages
-- Vanilla HTML, CSS, and JavaScript
-- Firebase Authentication
-- Cloud Firestore
-
-## Included Files
+Files included:
 
 - `index.html`
+- `portal.html`
 - `styles.css`
 - `firebase.js`
 - `ui.js`
 - `auth.js`
 - `business.js`
+- `employees.js`
 - `app.js`
+- `portal.js`
 
-## Current Features
+Current structure:
 
-- Professional landing and dashboard layout
-- Owner bootstrap account creation
-- Firestore collection bootstrap
-- Business accreditation record creation
-- Business list rendering with search
-- Live status cards and statistics
-- Toast notifications and polished interface
+- `index.html` is the secure login and first-run owner bootstrap page.
+- `portal.html` is the authenticated dashboard.
+- Business records are stored in the `businesses` collection.
+- Employee records are stored in the `employees` collection.
+- Bootstrap and member identity records are stored in `settings`, `members`, and `auditLogs`.
 
-## Deployment
+Important notes:
 
-Upload all files to the root of the `icrb-portal` repository and ensure GitHub Pages is enabled for the `main` branch root.
-
-## Important Note
-
-The bootstrap key is currently client-visible because this is a first-run static-site bootstrap path. After initial owner setup, you should rotate or remove that flow and tighten Firebase rules.
+- The Firestore reserved `__init__` issue has been fixed by using `_init`.
+- This is designed for GitHub Pages plus Firebase.
+- After initial owner bootstrap, rotate the bootstrap key and tighten Firebase rules.
