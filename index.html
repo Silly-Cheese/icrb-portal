@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICRB Portal</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <div class="brand-block">
+        <div class="brand-mark">ICRB</div>
+        <div>
+          <h1>ICRB Portal</h1>
+          <p>International Committee of Roblox Businesses</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-view="overview">Overview</button>
+        <button class="nav-btn" data-view="businesses">Businesses</button>
+        <button class="nav-btn" data-view="admin">Administration</button>
+        <button class="nav-btn" data-view="setup">Bootstrap Setup</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div id="authMiniStatus">Not signed in</div>
+        <button id="signOutBtn" class="ghost-btn hidden">Sign Out</button>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">Governance • Accreditation • Oversight</div>
+          <h2 id="pageTitle">Portal Overview</h2>
+        </div>
+        <div class="status-pills">
+          <span class="pill" id="systemPill">System Booting</span>
+          <span class="pill" id="rolePill">Guest</span>
+        </div>
+      </header>
+
+      <section id="bannerArea"></section>
+
+      <section id="view-overview" class="view active">
+        <div class="hero-card">
+          <div>
+            <div class="hero-kicker">Professional oversight infrastructure</div>
+            <h3>Centralized control for accredited Roblox businesses</h3>
+            <p>
+              This portal manages membership authority, business accreditation,
+              operational standing, and ownership-level administration.
+            </p>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-card">
+              <span>Total Businesses</span>
+              <strong id="statBusinesses">0</strong>
+            </div>
+            <div class="stat-card">
+              <span>Accredited</span>
+              <strong id="statAccredited">0</strong>
+            </div>
+            <div class="stat-card">
+              <span>Good Standing</span>
+              <strong id="statGoodStanding">0</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <section class="panel">
+            <div class="panel-head">
+              <h3>System Status</h3>
+            </div>
+            <div class="info-list">
+              <div class="info-row">
+                <span>Authentication</span>
+                <strong id="authStatusText">Checking</strong>
+              </div>
+              <div class="info-row">
+                <span>Firestore Initialization</span>
+                <strong id="firestoreStatusText">Pending</strong>
+              </div>
+              <div class="info-row">
+                <span>Signed-In User</span>
+                <strong id="signedInText">None</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h3>Recent Accredited Businesses</h3>
+            </div>
+            <div id="recentBusinesses" class="stack-list empty-state">
+              No business records loaded yet.
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="view-businesses" class="view">
+        <section class="panel">
+          <div class="panel-head">
+            <h3>Business Registry</h3>
+            <div class="panel-actions">
+              <input type="text" id="businessSearch" placeholder="Search businesses..." />
+            </div>
+          </div>
+          <div id="businessRegistry" class="business-grid empty-state">
+            No businesses available.
+          </div>
+        </section>
+      </section>
+
+      <section id="view-admin" class="view">
+        <section class="panel">
+          <div class="panel-head">
+            <h3>Owner / Admin Controls</h3>
+          </div>
+
+          <div id="adminGateMessage" class="notice warning">
+            You must be signed in as an Owner or Admin to use this section.
+          </div>
+
+          <div id="adminContent" class="hidden">
+            <form id="businessForm" class="form-grid">
+              <div class="form-group">
+                <label for="businessId">Business ID</label>
+                <input id="businessId" type="text" placeholder="ex. panora" />
+              </div>
+
+              <div class="form-group">
+                <label for="businessName">Business Name</label>
+                <input id="businessName" type="text" placeholder="Enter business name" />
+              </div>
+
+              <div class="form-group">
+                <label for="businessOwner">Business Owner</label>
+                <input id="businessOwner" type="text" placeholder="Owner username" />
+              </div>
+
+              <div class="form-group">
+                <label for="businessStatus">Accreditation Status</label>
+                <select id="businessStatus">
+                  <option value="Pending Review">Pending Review</option>
+                  <option value="Accredited">Accredited</option>
+                  <option value="Probation">Probation</option>
+                  <option value="Revoked">Revoked</option>
+                  <option value="Suspended">Suspended</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="businessStanding">Standing</label>
+                <select id="businessStanding">
+                  <option value="Excellent">Excellent</option>
+                  <option value="Good">Good</option>
+                  <option value="Neutral">Neutral</option>
+                  <option value="Under Review">Under Review</option>
+                  <option value="Poor">Poor</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="businessNotes">Administrative Notes</label>
+                <textarea id="businessNotes" rows="4" placeholder="Internal notes"></textarea>
+              </div>
+
+              <div class="form-group full-width">
+                <button type="submit" class="primary-btn">Save Business Record</button>
+              </div>
+            </form>
+
+            <div class="divider"></div>
+
+            <form id="seedBusinessForm" class="inline-form">
+              <button type="submit" class="ghost-btn">Seed Demo Businesses</button>
+            </form>
+          </div>
+        </section>
+      </section>
+
+      <section id="view-setup" class="view">
+        <section class="panel">
+          <div class="panel-head">
+            <h3>Bootstrap Setup Login</h3>
+          </div>
+
+          <div class="notice">
+            This is a temporary first-run setup flow. It creates your hidden owner account,
+            initializes the required records, and should be changed or removed after setup.
+          </div>
+
+          <form id="bootstrapForm" class="form-grid">
+            <div class="form-group">
+              <label for="setupCode">Bootstrap Setup Code</label>
+              <input id="setupCode" type="password" placeholder="Enter setup code" />
+            </div>
+
+            <div class="form-group">
+              <label for="ownerPassword">Set Owner Password</label>
+              <input id="ownerPassword" type="password" placeholder="Create owner password" />
+            </div>
+
+            <div class="form-group">
+              <label for="ownerUsername">Owner Username</label>
+              <input id="ownerUsername" type="text" value="Executive_Eagle" />
+            </div>
+
+            <div class="form-group">
+              <label for="ownerMemberId">Owner Member ID</label>
+              <input id="ownerMemberId" type="text" value="EXEC_EAGLE_001" />
+            </div>
+
+            <div class="form-group full-width">
+              <button type="submit" class="primary-btn">Create Owner Account</button>
+            </div>
+          </form>
+
+          <div class="divider"></div>
+
+          <form id="signInForm" class="form-grid">
+            <div class="form-group">
+              <label for="signinMemberId">Member ID</label>
+              <input id="signinMemberId" type="text" placeholder="Enter member ID" />
+            </div>
+
+            <div class="form-group">
+              <label for="signinPassword">Password</label>
+              <input id="signinPassword" type="password" placeholder="Enter password" />
+            </div>
+
+            <div class="form-group full-width">
+              <button type="submit" class="primary-btn">Sign In</button>
+            </div>
+          </form>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
