@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICRB Portal | Dashboard</title>
+  <meta
+    name="description"
+    content="Dashboard for the International Committee of Roblox Businesses."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <div class="bg-grid"></div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand-lockup">
+        <div class="brand-mark">ICRB</div>
+        <div>
+          <h1>ICRB Portal</h1>
+          <p>International Committee of Roblox Businesses</p>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <span id="sessionBadge" class="session-badge">Loading Session</span>
+        <button id="refreshBtn" class="btn btn-secondary" type="button">Refresh</button>
+        <button id="signOutBtn" class="btn btn-ghost" type="button">Sign Out</button>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="main-column">
+        <section class="glass-card hero-card">
+          <div class="hero-copy">
+            <div class="section-kicker">Governance • Accreditation • Employee Administration</div>
+            <h2>Operational command for ICRB oversight and internal management.</h2>
+            <p>
+              This dashboard allows authorized personnel to manage business accreditation,
+              employee records, operational standing, and system visibility in one place.
+            </p>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat-card">
+              <span>Total Businesses</span>
+              <strong id="statBusinesses">0</strong>
+            </div>
+            <div class="stat-card">
+              <span>Accredited</span>
+              <strong id="statAccredited">0</strong>
+            </div>
+            <div class="stat-card">
+              <span>Total Employees</span>
+              <strong id="statEmployees">0</strong>
+            </div>
+            <div class="stat-card">
+              <span>Active Employees</span>
+              <strong id="statActiveEmployees">0</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="glass-card panel">
+          <div class="panel-header">
+            <div>
+              <h3>System Status</h3>
+              <p>Portal initialization, authentication state, and Firestore readiness.</p>
+            </div>
+          </div>
+
+          <div id="systemStatus" class="status-banner info">Initializing dashboard...</div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <span>Authentication</span>
+              <strong id="authStatusValue">Pending</strong>
+            </div>
+            <div class="info-item">
+              <span>Firestore Setup</span>
+              <strong id="firestoreStatusValue">Pending</strong>
+            </div>
+            <div class="info-item">
+              <span>Signed-In User</span>
+              <strong id="signedInUserValue">Pending</strong>
+            </div>
+            <div class="info-item">
+              <span>User Role</span>
+              <strong id="roleValue">Pending</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="glass-card panel">
+          <div class="panel-header">
+            <div>
+              <h3>Business Directory</h3>
+              <p>View, search, and manage accredited business records.</p>
+            </div>
+          </div>
+
+          <div class="search-row">
+            <input
+              id="businessSearch"
+              class="search-input"
+              type="text"
+              placeholder="Search businesses by name, status, or standing..."
+            />
+          </div>
+
+          <div id="businessList" class="card-list">
+            <div class="empty-state">
+              <h4>No businesses loaded yet.</h4>
+              <p>Business records will appear here after creation.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="glass-card panel">
+          <div class="panel-header">
+            <div>
+              <h3>Employee Directory</h3>
+              <p>Manage employee records, roles, departments, and active status.</p>
+            </div>
+          </div>
+
+          <div class="search-row">
+            <input
+              id="employeeSearch"
+              class="search-input"
+              type="text"
+              placeholder="Search employees by name, username, role, or department..."
+            />
+          </div>
+
+          <div id="employeeList" class="card-list">
+            <div class="empty-state">
+              <h4>No employees loaded yet.</h4>
+              <p>Employee records will appear here after creation.</p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <aside class="sidebar-column">
+        <section class="glass-card panel">
+          <div class="panel-header">
+            <div>
+              <h3>Create Business Record</h3>
+              <p>Add a new accredited business entry.</p>
+            </div>
+          </div>
+
+          <div class="form-stack">
+            <div class="form-group">
+              <label for="businessName">Business Name</label>
+              <input id="businessName" type="text" placeholder="Business name" />
+            </div>
+
+            <div class="form-group">
+              <label for="businessStatus">Status</label>
+              <select id="businessStatus">
+                <option value="Accredited">Accredited</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Suspended">Suspended</option>
+                <option value="Revoked">Revoked</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="businessStanding">Standing</label>
+              <select id="businessStanding">
+                <option value="Excellent">Excellent</option>
+                <option value="Good">Good</option>
+                <option value="Neutral">Neutral</option>
+                <option value="Probationary">Probationary</option>
+                <option value="Sanctioned">Sanctioned</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="businessNotes">Administrative Notes</label>
+              <textarea id="businessNotes" rows="5" placeholder="Administrative notes"></textarea>
+            </div>
+
+            <button id="createBusinessBtn" class="btn btn-primary btn-full" type="button">
+              Create Business
+            </button>
+            <div id="businessMessage" class="inline-message muted">Waiting for submission.</div>
+          </div>
+        </section>
+
+        <section class="glass-card panel">
+          <div class="panel-header">
+            <div>
+              <h3>Create Employee Record</h3>
+              <p>Add a new internal employee record.</p>
+            </div>
+          </div>
+
+          <div class="form-stack">
+            <div class="form-group">
+              <label for="employeeId">Employee ID</label>
+              <input id="employeeId" type="text" placeholder="EX: EMP_001" />
+            </div>
+
+            <div class="form-group">
+              <label for="employeeName">Display Name</label>
+              <input id="employeeName" type="text" placeholder="Employee display name" />
+            </div>
+
+            <div class="form-group">
+              <label for="employeeUsername">Username</label>
+              <input id="employeeUsername" type="text" placeholder="Roblox or internal username" />
+            </div>
+
+            <div class="form-group">
+              <label for="employeeRole">Role</label>
+              <select id="employeeRole">
+                <option value="Employee">Employee</option>
+                <option value="Administrator">Administrator</option>
+                <option value="Owner">Owner</option>
+                <option value="Committee Lead">Committee Lead</option>
+                <option value="Staff">Staff</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="employeeDepartment">Department</label>
+              <input id="employeeDepartment" type="text" placeholder="EX: Public Relations" />
+            </div>
+
+            <div class="form-group">
+              <label for="employeeStatus">Status</label>
+              <select id="employeeStatus">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="On Leave">On Leave</option>
+                <option value="Suspended">Suspended</option>
+              </select>
+            </div>
+
+            <button id="createEmployeeBtn" class="btn btn-success btn-full" type="button">
+              Create Employee
+            </button>
+            <div id="employeeMessage" class="inline-message muted">Waiting for submission.</div>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <script type="module" src="portal.js"></script>
+</body>
+</html>
