@@ -233,24 +233,6 @@ function bindActions() {
   });
 }
 
-async function initializeDashboard() {
-  try {
-    setStatusBanner("Initializing dashboard...", "info");
-    setText("firestoreStatusValue", "Initializing");
-
-    await ensureBaseCollections();
-    await loadAllData();
-
-    setText("firestoreStatusValue", "Ready");
-    setStatusBanner("Dashboard initialized successfully.", "success");
-  } catch (error) {
-    console.error(error);
-    setText("firestoreStatusValue", "Error");
-    setStatusBanner(error.message || "Dashboard initialization failed.", "error");
-    showToast(error.message || "Initialization failed.", "error");
-  }
-}
-
 function initializeAuthGuard() {
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -270,6 +252,24 @@ function initializeAuthGuard() {
       setText("roleValue", "Authenticated");
     }
   });
+}
+
+async function initializeDashboard() {
+  try {
+    setStatusBanner("Initializing dashboard...", "info");
+    setText("firestoreStatusValue", "Initializing");
+
+    await ensureBaseCollections();
+    await loadAllData();
+
+    setText("firestoreStatusValue", "Ready");
+    setStatusBanner("Dashboard initialized successfully.", "success");
+  } catch (error) {
+    console.error(error);
+    setText("firestoreStatusValue", "Error");
+    setStatusBanner(error.message || "Dashboard initialization failed.", "error");
+    showToast(error.message || "Initialization failed.", "error");
+  }
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
