@@ -8,32 +8,24 @@ import {
   setDoc
 } from "./firebase.js";
 
-function slugifyBusinessName(name) {
-  return String(name || "")
+function makeSlug(value) {
+  return String(value || "")
     .trim()
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
 
-export async function ensureCollections() {
+export async function ensureBaseCollections() {
   const defaults = [
-    ["members", "__init__", { created: true, createdAt: serverTimestamp() }],
-    ["signupRequests", "__init__", { created: true, createdAt: serverTimestamp() }],
-    ["votes", "__init__", { created: true, createdAt: serverTimestamp() }],
-    ["employeeInfractions", "__init__", { created: true, createdAt: serverTimestamp() }],
-    ["auditLogs", "__init__", { created: true, createdAt: serverTimestamp() }],
-    ["businesses", "__init__", { created: true, createdAt: serverTimestamp() }],
-    [
-      "settings",
-      "ownerBootstrap",
-      {
-        enabled: true,
-        completed: false,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      }
-    ]
+    ["members", "_init", { initialized: true, createdAt: serverTimestamp() }],
+    ["settings", "ownerBootstrap", { enabled: true, completed: false, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }],
+    ["auditLogs", "_init", { initialized: true, createdAt: serverTimestamp() }],
+    ["businesses", "_init", { initialized: true, createdAt: serverTimestamp() }],
+    ["employees", "_init", { initialized: true, createdAt: serverTimestamp() }],
+    ["signupRequests", "_init", { initialized: true, createdAt: serverTimestamp() }],
+    ["votes", "_init", { initialized: true, createdAt: serverTimestamp() }],
+    ["employeeInfractions", "_init", { initialized: true, createdAt: serverTimestamp() }]
   ];
 
   for (const [collectionName, documentId, data] of defaults) {
@@ -61,9 +53,9 @@ export async function createBusinessRecord({
     throw new Error("Business name is required.");
   }
 
-  const businessId = slugifyBusinessName(normalizedName);
+  const businessId = makeSlug(normalizedName);
   if (!businessId) {
-    throw new Error("Could not generate a valid business ID.");
+    throw new Error("A valid business ID could not be generated.");
   }
 
   await setDoc(doc(db, "businesses", businessId), {
@@ -77,11 +69,9 @@ export async function createBusinessRecord({
   });
 
   await setDoc(doc(db, "auditLogs", `business_${businessId}_${Date.now()}`), {
-    type: "BUSINESS_RECORD_CREATED",
+    type: "BUSINESS_CREATED",
     businessId,
     name: normalizedName,
-    status: normalizedStatus || "Under Review",
-    standing: normalizedStanding || "Neutral",
     createdAt: serverTimestamp()
   });
 
@@ -90,54 +80,35 @@ export async function createBusinessRecord({
 
 export async function getBusinesses() {
   const snapshot = await getDocs(collection(db, "businesses"));
-  const businesses = [];
+  const items = [];
 
   snapshot.forEach((entry) => {
-    if (entry.id === "__init__") return;
-    businesses.push({
-      id: entry.id,
-      ...entry.data()
-    });
+    if (entry.id === "_init") return;
+    items.push({ id: entry.id, ...entry.data() });
   });
 
-  businesses.sort((a, b) => {
-    const aName = String(a.name || "").toLowerCase();
-    const bName = String(b.name || "").toLowerCase();
-    return aName.localeCompare(bName);
-  });
-
-  return businesses;
+  items.sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
+  return items;
 }
 
-export function filterBusinesses(businesses, query) {
+export function filterBusinesses(items, query) {
   const normalizedQuery = String(query || "").trim().toLowerCase();
-  if (!normalizedQuery) return businesses;
+  if (!normalizedQuery) return items;
 
-  return businesses.filter((business) => {
-    const name = String(business.name || "").toLowerCase();
-    const status = String(business.status || "").toLowerCase();
-    const standing = String(business.standing || "").toLowerCase();
-    const notes = String(business.notes || "").toLowerCase();
-
-    return (
-      name.includes(normalizedQuery) ||
-      status.includes(normalizedQuery) ||
-      standing.includes(normalizedQuery) ||
-      notes.includes(normalizedQuery)
-    );
+  return items.filter((item) => {
+    return [
+      item.name,
+      item.status,
+      item.standing,
+      item.notes,
+      item.businessId
+    ].some((value) => String(value || "").toLowerCase().includes(normalizedQuery));
   });
 }
 
-export function getBusinessStats(businesses) {
-  const total = businesses.length;
-  const accredited = businesses.filter((business) => business.status === "Accredited").length;
-  const goodStanding = businesses.filter((business) =>
-    ["Excellent", "Good"].includes(business.standing)
-  ).length;
-
+export function getBusinessStats(items) {
   return {
-    total,
-    accredited,
-    goodStanding
+    total: items.length,
+    accredited: items.filter((item) => item.status === "Accredited").length
   };
 }
