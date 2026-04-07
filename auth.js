@@ -1,14 +1,33 @@
 import {
   auth,
-  db,
+  collection,
   createUserWithEmailAndPassword,
+  db,
   doc,
-  getDoc,
+  getDocs,
   serverTimestamp,
-  setDoc
+  setDoc,
+  signInWithEmailAndPassword,
+  signOut
 } from "./firebase.js";
 
 const BOOTSTRAP_KEY = "ICRB-EXECUTIVE";
+
+export async function loginUser(email, password) {
+  const normalizedEmail = String(email || "").trim().toLowerCase();
+  const normalizedPassword = String(password || "");
+
+  if (!normalizedEmail || !normalizedPassword) {
+    throw new Error("Email and password are required.");
+  }
+
+  const result = await signInWithEmailAndPassword(auth, normalizedEmail, normalizedPassword);
+  return result.user;
+}
+
+export async function logoutUser() {
+  await signOut(auth);
+}
 
 export async function bootstrapOwnerAccount({
   bootstrapKey,
@@ -24,7 +43,7 @@ export async function bootstrapOwnerAccount({
   const normalizedPassword = String(password || "");
 
   if (!normalizedKey || !normalizedMemberId || !normalizedUsername || !normalizedEmail || !normalizedPassword) {
-    throw new Error("All bootstrap owner fields are required.");
+    throw new Error("All bootstrap fields are required.");
   }
 
   if (normalizedKey !== BOOTSTRAP_KEY) {
@@ -35,16 +54,7 @@ export async function bootstrapOwnerAccount({
     throw new Error("Password must be at least 6 characters.");
   }
 
-  const existingMember = await getDoc(doc(db, "members", normalizedMemberId));
-  if (existingMember.exists()) {
-    throw new Error("A member with that Member ID already exists.");
-  }
-
-  const authResult = await createUserWithEmailAndPassword(
-    auth,
-    normalizedEmail,
-    normalizedPassword
-  );
+  const authResult = await createUserWithEmailAndPassword(auth, normalizedEmail, normalizedPassword);
 
   await setDoc(doc(db, "members", normalizedMemberId), {
     memberId: normalizedMemberId,
@@ -70,8 +80,24 @@ export async function bootstrapOwnerAccount({
     type: "OWNER_BOOTSTRAP_COMPLETED",
     memberId: normalizedMemberId,
     username: normalizedUsername,
+    email: normalizedEmail,
     createdAt: serverTimestamp()
   });
 
   return authResult.user;
+}
+
+export async function getMemberByAuthUid(authUid) {
+  const snapshot = await getDocs(collection(db, "members"));
+  let matchedMember = null;
+
+  snapshot.forEach((entry) => {
+    if (entry.id === "_init") return;
+    const data = entry.data();
+    if (data.authUid === authUid) {
+      matchedMember = { id: entry.id, ...data };
+    }
+  });
+
+  return matchedMember;
 }
