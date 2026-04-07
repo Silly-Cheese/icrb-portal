@@ -1,4 +1,4 @@
-import { onAuthStateChanged } from "./firebase.js";
+import { auth, onAuthStateChanged } from "./firebase.js";
 import { bootstrapOwnerAccount, loginUser } from "./auth.js";
 import { ensureBaseCollections } from "./business.js";
 import { setInlineMessage, showToast } from "./ui.js";
@@ -72,7 +72,7 @@ async function initialize() {
     showToast(error.message || "Initialization failed.", "error");
   }
 
-  onAuthStateChanged((user) => {
+  onAuthStateChanged(auth, (user) => {
     if (user) {
       window.location.href = "./portal.html";
     }
